@@ -1,0 +1,1 @@
+cmake -DCMAKE_TOOLCHAIN_FILE=../toolchain/gcc-arm-none-eabi.cmake ..

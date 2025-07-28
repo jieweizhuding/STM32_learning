@@ -3,10 +3,15 @@ cmake_minimum_required(VERSION 3.20)
 
 # project settings
 # TODO 设置项目名
-project(GPIO  C CXX ASM)
+project(Templet  C CXX ASM)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
  
+ # 设置默认构建类型为 Debug，确保包含调试信息
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
+endif()
+
 
 #添加宏定义
 add_definitions(-DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER)
