@@ -1,0 +1,21 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceFolder}/build",
+            // TODO 更改elf文件
+            "executable": "Templet.elf",
+            "name": "Debug with OpenOCD",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32f1x.cfg"
+            ],
+            "svdFile": "${workspaceFolder}/toolchain/STM32F103.svd",
+            "runToEntryPoint": "main",
+            "preLaunchTask": "make_build"
+        },
+    ]
+}
