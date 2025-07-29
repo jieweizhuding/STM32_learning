@@ -18,8 +18,8 @@ add_definitions(-DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER)
 # add_definitions(-DUSE_HAL_DRIVER -DSTM32F103xB -DUSE_STDPERIPH_DRIVER)
 
 
-#添加头文件路径，即.h文件
-include_directories(./lib/inc ./code)
+#添加头文件路径，即.h文件，注意该命令不会递归搜索.h文件，必须手动添加所有路径
+include_directories(./lib/inc ./code ./code/hardware)
 
 
 #添加源文件路径,即.c或者.s文件
