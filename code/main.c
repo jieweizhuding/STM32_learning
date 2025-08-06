@@ -132,6 +132,37 @@ void TIM_PWMIinit(){
     TIM_Cmd(TIM3,ENABLE);
 }
 
+TIM_Encoderinit(){
+    RCC_AHBPeriphClockCmd(RCC_APB1Periph_TIM3,ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA,ENABLE);
+
+    GPIO_InitTypeDef GPIO_structure;
+    GPIO_structure.GPIO_Mode=GPIO_Mode_IPU;
+    GPIO_structure.GPIO_Pin=GPIO_Pin_6 | GPIO_Pin_7;
+    GPIO_structure.GPIO_Speed=GPIO_Speed_50MHz;
+    GPIO_Init(GPIOA,&GPIO_structure);
+
+    TIM_TimeBaseInitTypeDef TIM_BASEstructure;
+    TIM_BASEstructure.TIM_ClockDivision=TIM_CKD_DIV1;
+    TIM_BASEstructure.TIM_CounterMode=TIM_CounterMode_Up;
+    TIM_BASEstructure.TIM_Period=65536-1;
+    TIM_BASEstructure.TIM_Prescaler=0;
+    TIM_BASEstructure.TIM_RepetitionCounter=0;
+    TIM_TimeBaseInit(TIM3,&TIM_BASEstructure);
+
+    TIM_ICInitTypeDef TIM_ICstructure;
+    TIM_ICStructInit(&TIM_ICstructure);
+    TIM_ICstructure.TIM_Channel=TIM_Channel_1;
+    TIM_ICstructure.TIM_ICFilter=0xF;
+    TIM_ICInit(TIM3,&TIM_ICstructure);
+    TIM_ICstructure.TIM_Channel=TIM_Channel_2;
+    TIM_ICstructure.TIM_ICFilter=0xF;
+    TIM_ICInit(TIM3,&TIM_ICstructure);
+
+    TIM_EncoderInterfaceConfig(TIM3,TIM_EncoderMode_TI12,TIM_ICPolarity_Rising,TIM_ICPolarity_Rising);
+
+    TIM_Cmd(TIM3,ENABLE);
+}
 
 int main(void)
 {
