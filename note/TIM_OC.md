@@ -1,4 +1,6 @@
 OC即输出比较，IC为输入捕获，CC为compare\capture
+具体为当CNT的值小于CCR时，输出低电平(高电平)，大于CCR时，输出高电平(低电平)。
+
 OC有8中模式：
 ![alt text](<截图 2025-08-02 21-13-05.png>)
 其中常用的为PWM1模式
@@ -64,7 +66,7 @@ void TIM_SetCompare4(TIM_TypeDef* TIMx, uint16_t Compare4);
 ```
 
 初始化过程流程图为：
-![alt text](image.png)
+![alt text](<截图 2025-08-05 10-11-37.png>)
 
 初始化函数为：
 ```
