@@ -57,6 +57,7 @@ void EXTI_INIT(){
 ```
 
 过程中出现的部分涉及的函数有：
+```
 //AFIO事件中断配置
 void GPIO_EventOutputConfig(uint8_t GPIO_PortSource, uint8_t GPIO_PinSource);
 //AFIO复用功能引脚重映射
@@ -77,7 +78,7 @@ void EXTI_ClearFlag(uint32_t EXTI_Line);
 ITStatus EXTI_GetITStatus(uint32_t EXTI_Line);
 //EXTI在中断处理函数中清除EXTI寄存器的值
 void EXTI_ClearITPendingBit(uint32_t EXTI_Line);
-
+```
 
 
 中断处理程序：
