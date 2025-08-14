@@ -17,7 +17,7 @@ TIM初始化过程图为：
 ![alt text](<截图 2025-08-02 17-31-20.png>)
 
 TIM初始化涉及的函数：
-
+```
 void TIM_init(){
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_TIM2,ENABLE);
 
@@ -47,7 +47,8 @@ void TIM_init(){
     TIM_Cmd(TIM2,ENABLE);
 
 }
-
+```
+```
 //初始化时基模块
 void TIM_TimeBaseInit(TIM_TypeDef* TIMx, TIM_TimeBaseInitTypeDef* TIM_TimeBaseInitStruct);
 //启动计数器
@@ -75,3 +76,5 @@ FlagStatus TIM_GetFlagStatus(TIM_TypeDef* TIMx, uint16_t TIM_FLAG);
 void TIM_ClearFlag(TIM_TypeDef* TIMx, uint16_t TIM_FLAG);
 ITStatus TIM_GetITStatus(TIM_TypeDef* TIMx, uint16_t TIM_IT);
 void TIM_ClearITPendingBit(TIM_TypeDef* TIMx, uint16_t TIM_IT);
+
+```
