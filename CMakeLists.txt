@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.20)
 project(Templet  C CXX ASM)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_C_STANDARD 11)
- 
+
  # 设置默认构建类型为 Debug，确保包含调试信息
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Debug CACHE STRING "Build type" FORCE)
@@ -15,7 +15,7 @@ endif()
 
 #添加宏定义
 add_definitions(-DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER)
-# add_definitions(-DUSE_HAL_DRIVER -DSTM32F103xB -DUSE_STDPERIPH_DRIVER)
+# add_definitions(-DUSE_HAL_DRIVER -DUSE_STDPERIPH_DRIVER)
 
 
 #添加头文件路径，即.h文件
