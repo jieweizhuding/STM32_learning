@@ -26,6 +26,7 @@ GPIO为通用输入、输出口，可配置为8种输出、输出模式，引脚
 则对于每个引脚有：4个配置位，1个输入数据位，1个输出数据位，2个设置位，1个复位位，1个锁位。
 
 标准库GPIO：
+```
 1. 初始化：
 使用RCC使能GPIOx的时钟
 RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC, ENABLE);
@@ -66,3 +67,4 @@ if(GPIO_ReadInputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)==0){
 
     //到这里才认为按键操作结束
 }
+```
