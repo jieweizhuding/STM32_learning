@@ -68,3 +68,5 @@ if(GPIO_ReadInputDataBit(GPIO_TypeDef* GPIOx, uint16_t GPIO_Pin)==0){
     //到这里才认为按键操作结束
 }
 ```
+
+具体的引脚复用与外设的GPIO模式推荐详见STM32参考手册。
