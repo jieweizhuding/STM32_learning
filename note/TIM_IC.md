@@ -89,6 +89,7 @@ void TIM_ICinit(){
 ```
 
 当我们要获取频率时，需要知道
+
 $$
 f=\frac{72M}{PSC*CCR}
 $$
@@ -137,6 +138,7 @@ void TIM_PWMIinit(){
 }
 ```
 因为使用的是通道一与通道二，且TI1FP1作为从模式触发源，则CCR1为整个周期的CNT，用于计算频率，CCR2中为高电平的CNT，故占空比为：
+
 $$
 P=\frac{CCR2}{CCR1}
 $$
