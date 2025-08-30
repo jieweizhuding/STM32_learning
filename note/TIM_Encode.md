@@ -41,3 +41,13 @@ TIM_Encoderinit(){
     TIM_Cmd(TIM3,ENABLE);
 }
 ```
+
+编码器读取速度需要配合另一个定时器一起使用，另一个定时器负责规定周期，如40Hz的定时器，则读取时：
+```
+int16_t Get_value(){
+    int16_t temp=TIM_GetCounter(TIM3);
+    TIM_SetCounter(TIM3,0);
+    return temp;
+}
+```
+还要注意的是使用的另一个定时器的周期太短会导致精度较低，过长会导致数据更新过慢，需要自己权衡。
