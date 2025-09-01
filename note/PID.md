@@ -157,7 +157,76 @@ $$
     error0=Target-Actual;
     errorInt+=error0;
   
-     Dif0=(1-a)(error0-error1)+aDif1;
+    Dif0=(1-a)(error0-error1)+aDif1;
     Out=Kp*error0+Ki*errorInt+Kd*Dif0;
 ...
 ```
+
+## 输入输出优化
+#### 输出偏移
+在实际项目中我们注意到因为有阻力的存在，当I项为0，且有一个很小的Out输出时，无法带动系统运动，会导致误差无法消除，Out一直是一个很小的值，造成电量的浪费。所以我们可以给Out添加一个便宜，使其跳过过小的这一部分区域，而这个偏移很小，所以在Out较大时，这个偏移的影响可以忽略。
+$$
+Out=
+\begin{cases}
+0, &  Out = 0 \\
+Out+Offset , &  Out > 0 \\
+Out-Offset , &  Out <0
+\end{cases}
+$$
+Offset一般是令系统恰好运动的Out值。
+```
+...
+    error1=error0;
+    error0=Target-Actual;
+    errorInt+=error0;
+
+    
+    Out=Kp*error0+Ki*errorInt+Kd*Dif0;
+    if(Out>0){
+        Out+=Offset;
+    }else if(Out<0){
+        Out-=Offset;
+    }else{
+        Out=0;
+    }
+...
+```
+
+
+这个方法能够减小电量的损耗，也可以实现在没有I项的情况下消除小误差，但因为判断条件过于严格，只有极少的情况Out能为0，所以系统会不停抖动。要解决这个问题需要放宽Out为0的条件即可。这就是输入死区。
+
+
+#### 输入死区
+$$
+Out=
+\begin{cases}
+0, &  |Error|<A \\
+Out+Offset , &  |Error|>A\&Out > 0 \\
+Out-Offset , &  |Error|>A\&Out <0
+\end{cases}
+$$
+```
+...
+    error1=error0;
+    error0=Target-Actual;
+    errorInt+=error0;
+
+    if(fabs(error)<A){
+        Out=0;
+    }else{
+        Out=Kp*error0+Ki*errorInt+Kd*Dif0;
+        if(Out>0){
+            Out+=Offset;
+        }else if(Out<0){
+            Out-=Offset;
+        }else{
+            Out=0;
+        }
+    }
+    
+...
+```
+
+以上两者结合即可完美实现没有I项时对P项的改善，且因为没有I项，系统相应更快。
+
+总的来说，I项与输入输出优化各有优劣，具体使用哪个可以在项目中测试决定。
