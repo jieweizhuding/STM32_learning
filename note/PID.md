@@ -157,76 +157,52 @@ $$
     error0=Target-Actual;
     errorInt+=error0;
   
-    Dif0=(1-a)(error0-error1)+aDif1;
+     Dif0=(1-a)(error0-error1)+aDif1;
     Out=Kp*error0+Ki*errorInt+Kd*Dif0;
 ...
 ```
 
-## 输入输出优化
-#### 输出偏移
-在实际项目中我们注意到因为有阻力的存在，当I项为0，且有一个很小的Out输出时，无法带动系统运动，会导致误差无法消除，Out一直是一个很小的值，造成电量的浪费。所以我们可以给Out添加一个便宜，使其跳过过小的这一部分区域，而这个偏移很小，所以在Out较大时，这个偏移的影响可以忽略。
-$$
-Out=
-\begin{cases}
-0, &  Out = 0 \\
-Out+Offset , &  Out > 0 \\
-Out-Offset , &  Out <0
-\end{cases}
-$$
-Offset一般是令系统恰好运动的Out值。
-```
-...
-    error1=error0;
-    error0=Target-Actual;
-    errorInt+=error0;
 
+## 双环PID
+
+所谓双环PID，就是将使用了PID的电机整体视为一个普通的但性能更强的电机。
+一般是内部使用速度PID，外部使用位置PID。不仅能同时控制速度（快到指定位置时不是匀速，其他时间可以认为是匀速）与位置，而且性能更好。
+```
+
+    Speed=获取实际值;
+    Location=获取实际值;
     
-    Out=Kp*error0+Ki*errorInt+Kd*Dif0;
-    if(Out>0){
-        Out+=Offset;
-    }else if(Out<0){
-        Out-=Offset;
-    }else{
-        Out=0;
-    }
-...
-```
 
+    Inner_Actual=Speed;
+    Inner_error1=Inner_error0;
+    Inner_error0=Inner_Target-Inner_Actual;
+    Inner_errorInt+=Inner_error0;
+  
+    //积分限幅
 
-这个方法能够减小电量的损耗，也可以实现在没有I项的情况下消除小误差，但因为判断条件过于严格，只有极少的情况Out能为0，所以系统会不停抖动。要解决这个问题需要放宽Out为0的条件即可。这就是输入死区。
+    Inner_Out=Inner_Kp*Inner_error0+Inner_Ki*Inner_errorInt+Inner_Kd*Inner_Dif0;
 
-
-#### 输入死区
-$$
-Out=
-\begin{cases}
-0, &  |Error|<A \\
-Out+Offset , &  |Error|>A\&Out > 0 \\
-Out-Offset , &  |Error|>A\&Out <0
-\end{cases}
-$$
-```
-...
-    error1=error0;
-    error0=Target-Actual;
-    errorInt+=error0;
-
-    if(fabs(error)<A){
-        Out=0;
-    }else{
-        Out=Kp*error0+Ki*errorInt+Kd*Dif0;
-        if(Out>0){
-            Out+=Offset;
-        }else if(Out<0){
-            Out-=Offset;
-        }else{
-            Out=0;
-        }
-    }
+    //输出限幅
     
-...
+    setPWM(Inner_Out);
+
+
+
+    Outer_Actual=Location;
+    Outer_error1=Outer_error0;
+    Outer_error0=Outer_Target-Outer_Actual;
+    Outer_errorInt+=Outer_error0;
+  
+    //积分限幅
+
+    Outer_Out=Outer_Kp*Outer_error0+Outer_Ki*Outer_errorInt+Outer_Kd*Outer_Dif0;
+
+    //输出限幅
+    //因为下面一行代码，这里的输出限幅能够影响Inner的速度，所以这里的限幅可以限制内部的最大速度与最小速度。当设定的范围较小时，Inner_Target就是定值，因为内部可以认为是速度时刻等于InnerTarget的电机，所以可以认为此时速度为定值，直到快要到达指定位置时，开始减速。
+
+    Inner_Target=Outer_Out;
+
+
+
+
 ```
-
-以上两者结合即可完美实现没有I项时对P项的改善，且因为没有I项，系统相应更快。
-
-总的来说，I项与输入输出优化各有优劣，具体使用哪个可以在项目中测试决定。
